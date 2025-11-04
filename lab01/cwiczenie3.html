@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ćwiczenie 3: Kolorowe kwadraty</title>
+
+    <style>
+      .flex-row {
+        display: flex;
+        gap: 30px;
+
+        margin-bottom: 30px;
+      }
+
+      .box {
+        width: 100px;
+        height: 100px;
+      }
+
+      .box-div {
+        background-color: #ccc;
+      }
+
+      .box-img {
+        object-fit: cover;
+      }
+
+      .color-1 {
+        background-color: #e63946;
+      }
+      .color-2 {
+        background-color: #979d45;
+      }
+      .color-3 {
+        background-color: #1f571d;
+      }
+      .color-4 {
+        background-color: #2a9d8f;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Ćwiczenie 3: Układ kwadratów</h2>
+
+    <div class="flex-row">
+      <div class="box box-div color-1"></div>
+      <div class="box box-div color-2"></div>
+    </div>
+
+    <div class="flex-row">
+      <div class="box box-div color-3"></div>
+      <div class="box box-div color-4"></div>
+
+      <img
+        src="https://tenor.com/view/obamium-gif-19538439.gif"
+        alt="Yep, that's obamium"
+        class="box box-img"
+      />
+    </div>
+
+    <p><a href="index.html" style="color: #9ea000">Powrót</a></p>
+  </body>
+</html>
