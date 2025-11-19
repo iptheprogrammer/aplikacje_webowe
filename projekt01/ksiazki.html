@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Druga Apokalipsa — Książki</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
+  </head>
+  <body>
+    <header>
+      <div class="navbar">
+        <div class="brand">
+          <h1>Druga Apokalipsa</h1>
+          <small>R. Scott Bakker</small>
+        </div>
+        <nav class="nav-links">
+          <a href="index.html">Home</a>
+          <a href="postacie.html">Postacie</a>
+          <a href="ksiazki.html">Książki</a>
+          <a href="idee.html">Idee</a>
+          <a href="galeria.html">Galeria</a>
+          <a href="kontakt.html">Kontakt</a>
+        </nav>
+        <button id="theme-toggle" class="theme-toggle">
+          Zmień motyw (jasny)
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <section class="fact-block">
+        <h2>Przegląd Książek</h2>
+        <p>
+          Cykl składa się z dwóch podserii (tetralogii i trylogii),
+          opowiadających o nadchodzącym końcu świata i walce o ocalenie duszy
+          ludzkości.
+        </p>
+      </section>
+
+      <section class="card">
+        <h3>Podseria I: Książę Niczego (The Prince of Nothing)</h3>
+
+        <div class="book-item">
+          <h4 onclick="toggleDescription('book-1')">
+            1. Ciemność, Która Nadejdzie (The Darkness That Comes Before, 2004)
+            <span class="toggle-icon">+</span>
+          </h4>
+          <div id="book-1" class="book-description hidden">
+            <p>
+              Książka rozpoczyna się od opisu chaosu wywołanego Świętą Wojną
+              oraz wprowadza kluczowe postacie, w tym Anasûrimbora Kellhusa,
+              który przybywa do świata. Kellhus, dzięki swoim umiejętnościom,
+              natychmiast zaczyna kształtować wydarzenia, co prowadzi do starcia
+              różnych frakcji na tle zbliżającej się inwazji.
+            </p>
+          </div>
+        </div>
+
+        <div class="book-item">
+          <h4 onclick="toggleDescription('book-2')">
+            2. Prorok Wojownik (The Warrior-Prophet, 2005)
+            <span class="toggle-icon">+</span>
+          </h4>
+          <div id="book-2" class="book-description hidden">
+            <p>
+              Fabuła koncentruje się na eskalacji Świętej Wojny. Kellhus, już
+              jako charyzmatyczny przywódca, zdobywa coraz większą władzę,
+              manipulując religijnymi przekonaniami i polityką. W tej części
+              ujawnione zostają pierwsze wskazówki dotyczące prawdziwej, ukrytej
+              historii świata i natury Konsultu.
+            </p>
+          </div>
+        </div>
+
+        <div class="book-item">
+          <h4 onclick="toggleDescription('book-3')">
+            3. Myśl Tysiąckrotna (The Thousandfold Thought, 2006)
+            <span class="toggle-icon">+</span>
+          </h4>
+          <div id="book-3" class="book-description hidden">
+            <p>
+              Święta Wojna osiąga swój punkt kulminacyjny. Odkryta zostaje
+              twierdza Konsultu, a Kellhus finalizuje swój plan, by
+              przekształcić się w mesjasza. Tytuł nawiązuje do niemal idealnej
+              wizji przyszłości, którą Kellhus osiąga. Po zwycięstwie nad
+              Faninami, Kellhus ogłasza się Imperatorem-Aspektem.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h3>Podseria II: Imperator-Aspekt (The Aspect-Emperor)</h3>
+
+        <div class="book-item">
+          <h4 onclick="toggleDescription('book-4')">
+            4. Oko Osądzające (The Judging Eye, 2009)
+            <span class="toggle-icon">+</span>
+          </h4>
+          <div id="book-4" class="book-description hidden">
+            <p>
+              Akcja przenosi się dwadzieścia lat później. Kellhus, jako
+              Imperator-Aspekt, rządzi żelazną ręką, przygotowując się do
+              ostatecznej kampanii przeciwko Konsultowi. W tej części uwaga
+              skupia się na jego synu, Analicie, oraz na misji Drususa
+              Achamiana, by ostatecznie odkryć i ujawnić prawdę o Kellhusie.
+            </p>
+          </div>
+        </div>
+
+        <div class="book-item">
+          <h4 onclick="toggleDescription('book-5')">
+            5. Wojownik Białej Szczęki (The White-Luck Warrior, 2011)
+            <span class="toggle-icon">+</span>
+          </h4>
+          <div id="book-5" class="book-description hidden">
+            <p>
+              Konsult rozpoczyna swoje kontruderzenie, a działania Kellhusa
+              stają się coraz bardziej tyrańskie. Przedstawiony zostaje
+              tajemniczy "Wojownik Białej Szczęki", postać o nieprawdopodobnym
+              szczęściu, która odgrywa kluczową rolę w planach obu stron.
+              Imperator-Aspekt prowadzi swoje siły na wschód w ramach Wielkiej
+              Próby.
+            </p>
+          </div>
+        </div>
+
+        <div class="book-item">
+          <h4 onclick="toggleDescription('book-6')">
+            6. Wielka Próba (The Great Ordeal, 2016)
+            <span class="toggle-icon">+</span>
+          </h4>
+          <div id="book-6" class="book-description hidden">
+            <p>
+              Wielka Próba, masowa kampania wojskowa, wkracza w pełną fazę. Jest
+              to brutalna podróż przez spustoszone ziemie do serca królestwa
+              Konsultu. Walka o byt i psychika bohaterów są poddawane
+              ostatecznej próbie. W tej części narasta poczucie nieuchronnej
+              katastrofy.
+            </p>
+          </div>
+        </div>
+
+        <div class="book-item">
+          <h4 onclick="toggleDescription('book-7')">
+            7. Bezbożny Konsult (The Unholy Consult, 2017)
+            <span class="toggle-icon">+</span>
+          </h4>
+          <div id="book-7" class="book-description hidden">
+            <p>
+              Ostatnia, opublikowana część. Siły Imperium docierają do celu, a
+              konfrontacja z Konsultem i Nie-Bogiem staje się faktem. Książka
+              dostarcza głębokich, choć często niepokojących, odpowiedzi na
+              pytania dotyczące pochodzenia zła i celu istnienia w tym świecie.
+              Ostateczne starcie na polu bitwy, które ma zadecydować o losie
+              całego świata Eärwy.
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="footer-content">
+        <div>Autor: Ivan Polishchuk</div>
+        <div>Czas lokalny: <span id="clock"></span></div>
+      </div>
+    </footer>
+    <script src="assets/js/main.js"></script>
+  </body>
+</html>

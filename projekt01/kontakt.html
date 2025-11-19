@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Kontakt z nami</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
+  </head>
+  <body>
+    <header>
+      <div class="navbar">
+        <div class="brand">
+          <h1>Druga Apokalipsa</h1>
+          <small>R. Scott Bakker</small>
+        </div>
+        <nav class="nav-links">
+          <a href="index.html">Home</a>
+          <a href="postacie.html">Postacie</a>
+          <a href="ksiazki.html">Książki</a>
+          <a href="idee.html">Idee</a>
+          <a href="galeria.html">Galeria</a>
+          <a href="kontakt.html">Kontakt</a>
+        </nav>
+        <button id="theme-toggle" class="theme-toggle">
+          Zmień motyw (jasny)
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <section class="fact-block">
+        <h2>Skontaktuj się z nami</h2>
+        <p>
+          Masz pytanie dotyczące świata Drugiej Apokalipsy? Chcesz podzielić się
+          swoimi pomysłami lub zgłosić błąd na stronie?
+        </p>
+      </section>
+
+      <section class="card">
+        <h3>Formularz kontaktowy</h3>
+        <form id="contact-form">
+          <div class="form-group">
+            <label for="email">Twój adres E-Mail:</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              required
+              placeholder="np. achamian@earwa.com"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="topic">Temat wiadomości:</label>
+            <select id="topic" name="topic" required>
+              <option value="">-- Wybierz temat --</option>
+              <option value="pytanie">Pytanie o fabułę / postacie</option>
+              <option value="sugestia">Sugestia / Propozycja</option>
+              <option value="blad">Zgłoszenie błędu na stronie</option>
+              <option value="inne">Inne</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="message">Treść wiadomości:</label>
+            <textarea
+              id="message"
+              name="message"
+              rows="6"
+              required
+              placeholder="Wiadomość musi zawierać co najmniej 10 znaków."
+            ></textarea>
+          </div>
+
+          <div class="form-group submit-group">
+            <button type="submit" class="theme-toggle">Wyślij wiadomość</button>
+          </div>
+        </form>
+      </section>
+    </main>
+
+    <footer>
+      <div class="footer-content">
+        <div>Autor: Ivan Polishchuk</div>
+        <div>Czas lokalny: <span id="clock"></span></div>
+      </div>
+    </footer>
+    <script src="assets/js/main.js"></script>
+  </body>
+</html>
