@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Minimalist Stopwatch</title>
+    <style>
+      :root {
+        --bg-color: #f3f4f6;
+        --card-bg: #ffffff;
+        --text-color: #1f2937;
+        --accent-start: #b99a10;
+        --accent-stop: #ef4444;
+        --accent-reset: #6b7280;
+      }
+
+      body {
+        margin: 0;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: "Segoe UI", system-ui, sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+      }
+
+      .container {
+        background-color: var(--card-bg);
+        padding: 3rem;
+        border-radius: 24px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+        text-align: center;
+        width: 300px;
+      }
+
+      #timer-display {
+        font-size: 4rem;
+        font-weight: 300;
+        font-variant-numeric: tabular-nums;
+        margin-bottom: 2rem;
+        color: var(--text-color);
+      }
+
+      .controls {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+      }
+
+      button {
+        border: none;
+        padding: 12px 24px;
+        border-radius: 12px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        opacity: 0.9;
+      }
+
+      button:hover {
+        opacity: 1;
+        transform: translateY(-2px);
+      }
+
+      button:active {
+        transform: translateY(0);
+      }
+
+      #btn-start {
+        background-color: var(--accent-start);
+        color: white;
+      }
+      #btn-stop {
+        background-color: var(--accent-stop);
+        color: white;
+      }
+      #btn-reset {
+        background-color: var(--accent-reset);
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div id="timer-display">0s</div>
+
+      <div class="controls">
+        <button id="btn-start">Start</button>
+        <button id="btn-stop">Stop</button>
+        <button id="btn-reset">Reset</button>
+      </div>
+    </div>
+
+    <script>
+      const display = document.getElementById("timer-display");
+      const btnStart = document.getElementById("btn-start");
+      const btnStop = document.getElementById("btn-stop");
+      const btnReset = document.getElementById("btn-reset");
+
+      let startTime = 0;
+      let elapsedTime = 0;
+      let timerInterval = null;
+      let isRunning = false;
+
+      function formatTime(timeInMilliseconds) {
+        const totalSeconds = Math.floor(timeInMilliseconds / 1000);
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = totalSeconds % 60;
+
+        if (minutes > 0) {
+          return `${minutes}min ${seconds}s`;
+        } else {
+          return `${seconds}s`;
+        }
+      }
+
+      function updateDisplay() {
+        const now = Date.now();
+        const timePassed = now - startTime + elapsedTime;
+        display.textContent = formatTime(timePassed);
+      }
+
+      btnStart.addEventListener("click", () => {
+        if (!isRunning) {
+          startTime = Date.now();
+          timerInterval = setInterval(updateDisplay, 100);
+          isRunning = true;
+        }
+      });
+
+      btnStop.addEventListener("click", () => {
+        if (isRunning) {
+          clearInterval(timerInterval);
+          elapsedTime += Date.now() - startTime;
+          isRunning = false;
+        }
+      });
+
+      btnReset.addEventListener("click", () => {
+        clearInterval(timerInterval);
+        isRunning = false;
+        elapsedTime = 0;
+        display.textContent = "0s";
+      });
+    </script>
+  </body>
+</html>
