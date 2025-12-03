@@ -1,4 +1,4 @@
-/* Divine General MAHORAGA!!! --- */
+/* Divine General MAHORAGA!!! */
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -6,12 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Flappy Mahoraga</title>
     <style>
-      /* --- CSS: Minimalist & Modern JJK Style --- */
+      /* CSS: Minimalist and Modern */
       @import url("https://fonts.googleapis.com/css2?family=Teko:wght@400;600&display=swap");
 
       :root {
-        --bg-color: #1a1a1d; /* Dark Shibuya Vibe */
-        --accent-color: #d4af37; /* Mahoraga Gold */
+        --bg-color: #1a1a1d;
+        --accent-color: #d4af37;
         --text-color: #ffffff;
         --overlay-bg: rgba(0, 0, 0, 0.85);
       }
@@ -26,16 +26,11 @@
         user-select: none;
       }
 
-      /* Game Container */
       #game-container {
         position: relative;
         width: 100vw;
         height: 100vh;
-        background: linear-gradient(
-          to bottom,
-          #2b32b2,
-          #1488cc
-        ); /* Sky gradient */
+        background: linear-gradient(to bottom, #2b32b2, #1488cc);
       }
 
       canvas {
@@ -44,7 +39,6 @@
         height: 100%;
       }
 
-      /* UI Overlays */
       .ui-layer {
         position: absolute;
         top: 0;
@@ -96,7 +90,6 @@
         box-shadow: 0 0 15px var(--accent-color);
       }
 
-      /* HUD (Score) */
       #hud {
         position: absolute;
         top: 20px;
@@ -104,11 +97,10 @@
         font-size: 4rem;
         font-weight: 600;
         z-index: 5;
-        pointer-events: none; /* Click through */
+        pointer-events: none;
         text-shadow: 2px 2px 0 #000;
       }
 
-      /* High Score Table */
       .score-board {
         background: rgba(255, 255, 255, 0.1);
         padding: 20px;
@@ -166,9 +158,8 @@
     </div>
 
     <script>
-      /* --- JAVASCRIPT: Game Logic --- */
+      /*Game Logic*/
 
-      // 1. CONFIGURATION
       const canvas = document.getElementById("gameCanvas");
       const ctx = canvas.getContext("2d");
 
@@ -179,9 +170,7 @@
       window.addEventListener("resize", resize);
       resize();
 
-      // Placeholder Audio
       const playSound = (type) => {
-        // Uncomment if you add files:
         // const s = new Audio(`assets/${type}.mp3`); s.play();
       };
 
@@ -199,9 +188,6 @@
       let gameSpeed = 3;
       let isNewRecord = false;
 
-      // 2. ENTITIES
-
-      // --- BIRD (MAHORAGA) CLASS ---
       class Bird {
         constructor() {
           this.x = 100;
@@ -223,7 +209,7 @@
           if (currentState === STATE.VICTORY_SPIN) {
             this.rotation += 0.2;
           } else if (currentState === STATE.START) {
-            this.rotation = 0; // Level during start
+            this.rotation = 0;
           } else {
             if (this.velocity < 0) this.rotation = -0.3;
             else {
@@ -233,13 +219,11 @@
           }
           ctx.rotate(this.rotation);
 
-          // Body (White stylized)
           ctx.fillStyle = "#FFF";
           ctx.beginPath();
           ctx.ellipse(0, 0, this.w / 2, this.h / 2, 0, 0, Math.PI * 2);
           ctx.fill();
 
-          // Details
           ctx.fillStyle = "#CCC";
           ctx.beginPath();
           ctx.arc(-5, 0, 10, 0, Math.PI * 2);
@@ -247,7 +231,6 @@
 
           ctx.restore();
 
-          // --- WHEEL DRAWING ---
           ctx.save();
           ctx.translate(this.x, this.y - 35);
           this.wheelAngle += 0.02;
@@ -270,21 +253,17 @@
         }
 
         update() {
-          // 1. VICTORY SPIN: No movement
           if (currentState === STATE.VICTORY_SPIN) return;
 
           if (currentState === STATE.START) {
-            // Hover up and down gently using Sine wave
             this.y = canvas.height / 2 + Math.sin(frames * 0.05) * 10;
-            this.velocity = 0; // Reset physics
-            return; // Stop function here, don't apply gravity
+            this.velocity = 0;
+            return;
           }
 
-          // 3. NORMAL PHYSICS (Playing or Dying)
           this.velocity += this.gravity;
           this.y += this.velocity;
 
-          // Floor collision
           if (this.y + this.h / 2 >= canvas.height) {
             this.y = canvas.height - this.h / 2;
             if (currentState === STATE.PLAYING) {
@@ -295,7 +274,6 @@
             }
           }
 
-          // Ceiling collision
           if (this.y - this.h / 2 <= 0) {
             this.y = this.h / 2;
             this.velocity = 0;
@@ -310,7 +288,6 @@
         }
       }
 
-      // --- PIPES CLASS ---
       const pipes = [];
       const pipeWidth = 60;
       const pipeGap = 170;
@@ -359,8 +336,6 @@
         }
       }
 
-      // 3. GAME LOGIC
-
       let bird = new Bird();
 
       function initGame() {
@@ -370,7 +345,7 @@
         frames = 0;
         gameSpeed = 3;
         hud.textContent = score;
-        currentState = STATE.START; // Set state to START
+        currentState = STATE.START;
         isNewRecord = false;
 
         document.getElementById("start-screen").classList.remove("hidden");
@@ -383,7 +358,7 @@
           currentState = STATE.PLAYING;
           document.getElementById("start-screen").classList.add("hidden");
           document.getElementById("hud").classList.remove("hidden");
-          bird.jump(); // Optional: slight jump on start
+          bird.jump();
           playSound("bg");
         }
       }
@@ -431,7 +406,6 @@
         renderLeaderboard();
       }
 
-      // --- LOCAL STORAGE ---
       function getHighScores() {
         const scores = localStorage.getItem("mahoragaHighScores");
         return scores ? JSON.parse(scores) : [];
@@ -465,8 +439,6 @@
           list.appendChild(li);
         });
       }
-
-      // 4. MAIN LOOP
 
       function animate() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -508,7 +480,6 @@
         requestAnimationFrame(animate);
       }
 
-      // 5. INPUT HANDLING
       window.addEventListener("keydown", (e) => {
         if (e.code === "Space") {
           if (currentState === STATE.PLAYING) {
