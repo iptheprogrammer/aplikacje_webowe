@@ -1,0 +1,78 @@
+### 1. Registration
+POST http://localhost:3003/api/register
+Content-Type: application/json
+
+{
+  "email": "test@test.com",
+  "password": "123"
+}
+
+### 2. Log in 
+POST http://localhost:3003/api/login
+Content-Type: application/json
+
+{
+  "email": "test@test.com",
+  "password": "123"
+}
+
+### 3. Books add (Books Service; Main Test)
+POST http://localhost:3001/api/books
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZW1haWwiOiJ0ZXN0QHRlc3QuY29tIiwiaWF0IjoxNzY1OTY2MTYwLCJleHAiOjE3NjU5Njk3NjB9.mrcvLTT8xwAV4R4RomFugbHlyEvnUxrz9FstR2CRwSg
+
+{
+  "id": 1,
+  "title": "Does Runnuble dream about iterfaces?",
+  "author": "P. J. Javaick",
+  "year": 2077
+}
+
+### 4. Orders add (Orders Service; Main Test)
+POST http://localhost:3002/api/orders
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZW1haWwiOiJ0ZXN0QHRlc3QuY29tIiwiaWF0IjoxNzY1OTY2MTYwLCJleHAiOjE3NjU5Njk3NjB9.mrcvLTT8xwAV4R4RomFugbHlyEvnUxrz9FstR2CRwSg
+
+{
+  "userId": 1,
+  "bookId": 1,
+  "quantity": 2
+}
+
+### 5. Show the book
+GET http://localhost:3001/api/books/1
+
+### 6. List all books
+GET http://localhost:3001/api/books
+
+### 7. Delete book
+DELETE http://localhost:3001/api/books/99
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZW1haWwiOiJ0ZXN0QHRlc3QuY29tIiwiaWF0IjoxNzY1OTkyMDA3LCJleHAiOjE3NjU5OTU2MDd9.Lw5rIJ5ornYUO-tgmSY6Q0vjoF58GOjcSX_8XsFbNJ8
+
+### 8. List user orders
+GET http://localhost:3002/api/orders/1
+
+### 9. Quantity Change TO Order
+PATCH http://localhost:3002/api/orders/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZW1haWwiOiJ0ZXN0QHRlc3QuY29tIiwiaWF0IjoxNzY1OTY2MTYwLCJleHAiOjE3NjU5Njk3NjB9.mrcvLTT8xwAV4R4RomFugbHlyEvnUxrz9FstR2CRwSg
+
+{
+  "quantity": 50
+}
+
+### 10. Delete order (Orders Service)
+DELETE http://localhost:3002/api/orders/2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZW1haWwiOiJ0ZXN0QHRlc3QuY29tIiwiaWF0IjoxNzY1OTY2MTYwLCJleHAiOjE3NjU5Njk3NjB9.mrcvLTT8xwAV4R4RomFugbHlyEvnUxrz9FstR2CRwSg
+
+
+### 11. Tricky Test
+POST http://localhost:3002/api/orders
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZW1haWwiOiJ0ZXN0QHRlc3QuY29tIiwiaWF0IjoxNzY1OTY2MTYwLCJleHAiOjE3NjU5Njk3NjB9.mrcvLTT8xwAV4R4RomFugbHlyEvnUxrz9FstR2CRwSg
+Content-Type: application/json
+
+{
+  "userId": 1,
+  "bookId": 999,
+  "quantity": 1
+}
