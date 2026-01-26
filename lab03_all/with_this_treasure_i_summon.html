@@ -1,0 +1,510 @@
+/* Divine General MAHORAGA!!! */
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Flappy Mahoraga</title>
+    <style>
+      /* CSS: Minimalist and Modern */
+      @import url("https://fonts.googleapis.com/css2?family=Teko:wght@400;600&display=swap");
+
+      :root {
+        --bg-color: #1a1a1d;
+        --accent-color: #d4af37;
+        --text-color: #ffffff;
+        --overlay-bg: rgba(0, 0, 0, 0.85);
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: var(--bg-color);
+        font-family: "Teko", sans-serif;
+        color: var(--text-color);
+        user-select: none;
+      }
+
+      #game-container {
+        position: relative;
+        width: 100vw;
+        height: 100vh;
+        background: linear-gradient(to bottom, #2b32b2, #1488cc);
+      }
+
+      canvas {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+
+      .ui-layer {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background-color: var(--overlay-bg);
+        z-index: 10;
+        transition: opacity 0.3s;
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
+      h1 {
+        font-size: 5rem;
+        margin: 0;
+        text-transform: uppercase;
+        letter-spacing: 5px;
+        color: var(--accent-color);
+        text-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+      }
+
+      p {
+        font-size: 1.5rem;
+        letter-spacing: 1px;
+      }
+
+      button {
+        margin-top: 20px;
+        padding: 15px 40px;
+        font-family: "Teko", sans-serif;
+        font-size: 2rem;
+        color: var(--bg-color);
+        background-color: var(--accent-color);
+        border: none;
+        cursor: pointer;
+        text-transform: uppercase;
+        transition: transform 0.1s, box-shadow 0.2s;
+      }
+
+      button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 15px var(--accent-color);
+      }
+
+      #hud {
+        position: absolute;
+        top: 20px;
+        right: 40px;
+        font-size: 4rem;
+        font-weight: 600;
+        z-index: 5;
+        pointer-events: none;
+        text-shadow: 2px 2px 0 #000;
+      }
+
+      .score-board {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 20px;
+        border-radius: 10px;
+        min-width: 300px;
+        text-align: center;
+        margin-bottom: 20px;
+        backdrop-filter: blur(5px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .score-board h3 {
+        margin-top: 0;
+        color: var(--accent-color);
+        font-size: 2rem;
+      }
+
+      .score-list {
+        list-style: none;
+        padding: 0;
+        font-size: 1.5rem;
+      }
+
+      .score-list li {
+        display: flex;
+        justify-content: space-between;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 5px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="game-container">
+      <canvas id="gameCanvas"></canvas>
+
+      <div id="hud">0</div>
+
+      <div id="start-screen" class="ui-layer">
+        <h1>Flappy Mahoraga</h1>
+        <p>Press SPACE to adapt (jump)</p>
+        <button id="start-btn">Start Game</button>
+      </div>
+
+      <div id="game-over-screen" class="ui-layer hidden">
+        <h1 id="go-title">Game Over</h1>
+
+        <div class="score-board">
+          <p>Score: <span id="current-score" style="color: white">0</span></p>
+          <h3>Top 5 Adapters</h3>
+          <ul id="high-score-list" class="score-list"></ul>
+        </div>
+
+        <button id="restart-btn">Try Again</button>
+      </div>
+    </div>
+
+    <script>
+      /*Game Logic*/
+
+      const canvas = document.getElementById("gameCanvas");
+      const ctx = canvas.getContext("2d");
+
+      function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      window.addEventListener("resize", resize);
+      resize();
+
+      const playSound = (type) => {
+        // const s = new Audio(`assets/${type}.mp3`); s.play();
+      };
+
+      const STATE = {
+        START: 0,
+        PLAYING: 1,
+        DYING: 2,
+        GAMEOVER: 3,
+        VICTORY_SPIN: 4,
+      };
+
+      let currentState = STATE.START;
+      let frames = 0;
+      let score = 0;
+      let gameSpeed = 3;
+      let isNewRecord = false;
+
+      class Bird {
+        constructor() {
+          this.x = 100;
+          this.y = canvas.height / 2;
+          this.w = 40;
+          this.h = 40;
+          this.velocity = 0;
+          this.gravity = 0.25;
+          this.jumpStrength = 6.5;
+          this.rotation = 0;
+          this.wheelAngle = 0;
+        }
+
+        draw() {
+          ctx.save();
+          ctx.translate(this.x, this.y);
+
+          // Rotation logic
+          if (currentState === STATE.VICTORY_SPIN) {
+            this.rotation += 0.2;
+          } else if (currentState === STATE.START) {
+            this.rotation = 0;
+          } else {
+            if (this.velocity < 0) this.rotation = -0.3;
+            else {
+              this.rotation += 0.05;
+              if (this.rotation > 1.5) this.rotation = 1.5;
+            }
+          }
+          ctx.rotate(this.rotation);
+
+          ctx.fillStyle = "#FFF";
+          ctx.beginPath();
+          ctx.ellipse(0, 0, this.w / 2, this.h / 2, 0, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.fillStyle = "#CCC";
+          ctx.beginPath();
+          ctx.arc(-5, 0, 10, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.restore();
+
+          ctx.save();
+          ctx.translate(this.x, this.y - 35);
+          this.wheelAngle += 0.02;
+          ctx.rotate(this.wheelAngle);
+
+          ctx.strokeStyle = "#d4af37";
+          ctx.lineWidth = 4;
+          ctx.beginPath();
+          ctx.arc(0, 0, 12, 0, Math.PI * 2);
+          ctx.stroke();
+
+          for (let i = 0; i < 8; i++) {
+            ctx.rotate(Math.PI / 4);
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.lineTo(0, -12);
+            ctx.stroke();
+          }
+          ctx.restore();
+        }
+
+        update() {
+          if (currentState === STATE.VICTORY_SPIN) return;
+
+          if (currentState === STATE.START) {
+            this.y = canvas.height / 2 + Math.sin(frames * 0.05) * 10;
+            this.velocity = 0;
+            return;
+          }
+
+          this.velocity += this.gravity;
+          this.y += this.velocity;
+
+          if (this.y + this.h / 2 >= canvas.height) {
+            this.y = canvas.height - this.h / 2;
+            if (currentState === STATE.PLAYING) {
+              gameOver();
+            } else if (currentState === STATE.DYING) {
+              playSound("ground");
+              finalizeGameOver();
+            }
+          }
+
+          if (this.y - this.h / 2 <= 0) {
+            this.y = this.h / 2;
+            this.velocity = 0;
+          }
+        }
+
+        jump() {
+          if (currentState !== STATE.PLAYING) return;
+          this.velocity = -this.jumpStrength;
+          this.rotation = -0.5;
+          playSound("jump");
+        }
+      }
+
+      const pipes = [];
+      const pipeWidth = 60;
+      const pipeGap = 170;
+      const pipeFrequency = 180;
+
+      class Pipe {
+        constructor() {
+          this.x = canvas.width;
+          this.topHeight = Math.random() * (canvas.height - pipeGap - 100) + 50;
+          this.bottomY = this.topHeight + pipeGap;
+          this.passed = false;
+        }
+
+        draw() {
+          ctx.fillStyle = "#111";
+          ctx.strokeStyle = "#444";
+          ctx.lineWidth = 2;
+
+          ctx.fillRect(this.x, 0, pipeWidth, this.topHeight);
+          ctx.strokeRect(this.x, 0, pipeWidth, this.topHeight);
+
+          ctx.fillRect(
+            this.x,
+            this.bottomY,
+            pipeWidth,
+            canvas.height - this.bottomY
+          );
+          ctx.strokeRect(
+            this.x,
+            this.bottomY,
+            pipeWidth,
+            canvas.height - this.bottomY
+          );
+        }
+
+        update() {
+          if (currentState !== STATE.PLAYING) return;
+          this.x -= gameSpeed;
+
+          if (!this.passed && this.x + pipeWidth < bird.x) {
+            score++;
+            hud.textContent = score;
+            this.passed = true;
+            if (score % 5 === 0) gameSpeed += 0.2;
+          }
+        }
+      }
+
+      let bird = new Bird();
+
+      function initGame() {
+        bird = new Bird();
+        pipes.length = 0;
+        score = 0;
+        frames = 0;
+        gameSpeed = 3;
+        hud.textContent = score;
+        currentState = STATE.START;
+        isNewRecord = false;
+
+        document.getElementById("start-screen").classList.remove("hidden");
+        document.getElementById("game-over-screen").classList.add("hidden");
+        document.getElementById("hud").classList.add("hidden");
+      }
+
+      function startGame() {
+        if (currentState === STATE.START) {
+          currentState = STATE.PLAYING;
+          document.getElementById("start-screen").classList.add("hidden");
+          document.getElementById("hud").classList.remove("hidden");
+          bird.jump();
+          playSound("bg");
+        }
+      }
+
+      function hitObstacle() {
+        playSound("crash");
+        currentState = STATE.DYING;
+        bird.velocity = -3;
+      }
+
+      function finalizeGameOver() {
+        playSound("stop_bg");
+
+        const highScores = getHighScores();
+        const lowestHigh =
+          highScores.length < 5 ? 0 : highScores[highScores.length - 1].score;
+
+        if (score > lowestHigh) {
+          isNewRecord = true;
+          saveScore(score);
+          currentState = STATE.VICTORY_SPIN;
+          document.getElementById("go-title").textContent = "NEW RECORD!";
+          document.getElementById("go-title").style.color = "#d4af37";
+
+          setTimeout(() => {
+            currentState = STATE.GAMEOVER;
+            showGameOverUI();
+          }, 3000);
+        } else {
+          currentState = STATE.GAMEOVER;
+          document.getElementById("go-title").textContent = "GAME OVER";
+          document.getElementById("go-title").style.color = "white";
+          showGameOverUI();
+        }
+      }
+
+      function gameOver() {
+        playSound("crash");
+        finalizeGameOver();
+      }
+
+      function showGameOverUI() {
+        document.getElementById("game-over-screen").classList.remove("hidden");
+        document.getElementById("current-score").innerText = score;
+        renderLeaderboard();
+      }
+
+      function getHighScores() {
+        const scores = localStorage.getItem("mahoragaHighScores");
+        return scores ? JSON.parse(scores) : [];
+      }
+
+      function saveScore(newScore) {
+        const scores = getHighScores();
+        const date = new Date().toLocaleDateString("en-GB");
+
+        scores.push({ score: newScore, date: date });
+        scores.sort((a, b) => b.score - a.score);
+        scores.splice(5);
+
+        localStorage.setItem("mahoragaHighScores", JSON.stringify(scores));
+      }
+
+      function renderLeaderboard() {
+        const list = document.getElementById("high-score-list");
+        list.innerHTML = "";
+        const scores = getHighScores();
+
+        scores.forEach((s, index) => {
+          const li = document.createElement("li");
+          li.innerHTML = `<span>#${index + 1} ${s.date}</span> <span>${
+            s.score
+          }</span>`;
+          if (isNewRecord && s.score === score && index === 0) {
+            li.style.color = "#d4af37";
+            li.style.fontWeight = "bold";
+          }
+          list.appendChild(li);
+        });
+      }
+
+      function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        if (currentState === STATE.PLAYING) {
+          if (frames % pipeFrequency === 0) {
+            pipes.push(new Pipe());
+          }
+        }
+
+        for (let i = 0; i < pipes.length; i++) {
+          pipes[i].draw();
+          pipes[i].update();
+
+          if (currentState === STATE.PLAYING) {
+            if (
+              bird.x + bird.w / 2 > pipes[i].x &&
+              bird.x - bird.w / 2 < pipes[i].x + pipeWidth
+            ) {
+              if (
+                bird.y - bird.h / 2 < pipes[i].topHeight ||
+                bird.y + bird.h / 2 > pipes[i].bottomY
+              ) {
+                hitObstacle();
+              }
+            }
+          }
+
+          if (pipes[i].x + pipeWidth < 0) {
+            pipes.shift();
+            i--;
+          }
+        }
+
+        bird.draw();
+        bird.update();
+
+        frames++;
+        requestAnimationFrame(animate);
+      }
+
+      window.addEventListener("keydown", (e) => {
+        if (e.code === "Space") {
+          if (currentState === STATE.PLAYING) {
+            bird.jump();
+          } else if (currentState === STATE.START) {
+            startGame();
+          } else if (currentState === STATE.GAMEOVER) {
+            initGame();
+          }
+        }
+      });
+
+      window.addEventListener("touchstart", (e) => {
+        if (currentState === STATE.PLAYING) bird.jump();
+        else if (currentState === STATE.START) startGame();
+        else if (currentState === STATE.GAMEOVER) initGame();
+      });
+
+      document.getElementById("start-btn").addEventListener("click", startGame);
+      document
+        .getElementById("restart-btn")
+        .addEventListener("click", initGame);
+
+      initGame();
+      animate();
+    </script>
+  </body>
+</html>
